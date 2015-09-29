@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
+<generatorConfiguration>
+	<classPathEntry
+		location="/Users/chenrui/Documents/workspace/exts/mysql-connector-java-5.1.21.jar" />
+	<context id="context1">
+		<commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+			<!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+		</commentGenerator>
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
+			connectionURL="jdbc:mysql://localhost:3307/test"
+			userId="root" password="123" />
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+		<javaModelGenerator targetPackage="com.luckyrui.platform.questionnaire.model"
+			targetProject="questionnaire/src/main/java">
+			<!-- 从数据库返回的值被清理前后的空格 -->
+			<property name="trimStrings" value="true" />
+			<!-- <property name="rootInterface" value="com.haidilao.hicloud.boh.model.BaseModel"/> -->
+		</javaModelGenerator>
+		<sqlMapGenerator targetPackage="com.luckyrui.platform.questionnaire.dao.mybatis"
+			targetProject="questionnaire/src/main/java">
+		</sqlMapGenerator>
+		<javaClientGenerator targetPackage="com.luckyrui.platform.questionnaire.dao"
+			targetProject="questionnaire/src/main/java" type="XMLMAPPER">
+			<!-- <property name="rootInterface" value="com.haidilao.hicloud.boh.dao.MapperDao"/> -->
+		</javaClientGenerator>
+		<table tableName="que_answer" domainObjectName="QueAnswer"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+		</table>
+		<table tableName="que_question" domainObjectName="QueQuestion"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+		</table>
+		<table tableName="que_question_answer" domainObjectName="QueQuestionAnswer"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+		</table>
+		<table tableName="que_result" domainObjectName="QueResult"
+			enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false"
+			selectByExampleQueryId="false">
+		</table>
+	</context>
+</generatorConfiguration>
