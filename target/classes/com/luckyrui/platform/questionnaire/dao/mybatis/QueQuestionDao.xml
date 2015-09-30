@@ -171,6 +171,7 @@
 			que_question_answer qa
 			LEFT JOIN que_question q ON q.id = qa.question_id
 			LEFT JOIN que_answer a ON a.id = qa.answer_id
+		where q.delete_flag = "1"
 		order by qa.sort asc,q.sort asc
 	</select>
 </mapper>
