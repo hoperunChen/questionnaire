@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <div>
 <form id="question_form"  method="post">
-	<div>
-		<input id="submit_button" type="button"  value="提交" />
-	</div>
+	
 </form>
-
+<div class="span7 text-center">
+	<input class="btn btn-success" id="submit_button" type="button"  value="提交" />
+</div>
 <script>
 	(function(){
 		var data = Data.getData("/question/get_all_question");
