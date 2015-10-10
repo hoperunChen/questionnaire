@@ -21,8 +21,7 @@ public class QueQuestionDaoImpl extends SessionDao implements QueQuestionDao {
 
 	@Override
 	public int insert(QueQuestion record) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.getSession().insert(this.getStatement("insert"),record); 
 	}
 
 	@Override

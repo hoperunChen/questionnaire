@@ -1,7 +1,6 @@
 package com.luckyrui.platform.questionnaire.controller;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +16,7 @@ import com.luckyrui.platform.questionnaire.model.page.PageQuestion;
 import com.luckyrui.platform.questionnaire.service.AnswerService;
 import com.luckyrui.platform.questionnaire.service.QuestionService;
 import com.luckyrui.platform.utils.ApiUtils;
+
 
 
 @RequestMapping("/question")
@@ -59,6 +59,34 @@ public class QuestionController {
 			}
 		}
 		answerService.submitAnswer(question);
+		return ApiUtils.getSuccess();
+	}
+	
+	
+	/**
+	 * 添加问题
+	 * @param question
+	 * @param answer
+	 * @param sort
+	 * @param visible
+	 * @return
+	 */
+	@RequestMapping(value="add_question",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String,Object> addQuestion(String question,String[] answer,String sort,String visible){
+		return questionService.addQuestion(question, answer, sort, visible);
+	}
+	
+	
+	/**
+	 * 删除问题
+	 * @param qqaId
+	 * @return
+	 */
+	@RequestMapping(value="delete_question",method=RequestMethod.POST)
+	@ResponseBody
+	public Map<String, Object> deleteQuestion(String qqaId){
+		questionService.deleteQuestion(qqaId);
 		return ApiUtils.getSuccess();
 	}
 }

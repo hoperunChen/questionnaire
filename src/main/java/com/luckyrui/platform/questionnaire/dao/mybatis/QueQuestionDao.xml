@@ -166,7 +166,9 @@
 			q.id as q_id,
 			a.id as a_id,
 			q.question as question,
-			a.answer as answer
+			a.answer as answer,
+			q.visible as q_visible,
+			q.sort as q_sort
 		FROM
 			que_question_answer qa
 			LEFT JOIN que_question q ON q.id = qa.question_id

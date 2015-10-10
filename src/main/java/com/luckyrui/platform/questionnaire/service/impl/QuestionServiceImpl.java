@@ -1,6 +1,7 @@
 package com.luckyrui.platform.questionnaire.service.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -8,11 +9,16 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.luckyrui.platform.questionnaire.dao.QueAnswerDao;
+import com.luckyrui.platform.questionnaire.dao.QueQuestionAnswerDao;
 import com.luckyrui.platform.questionnaire.dao.QueQuestionDao;
 import com.luckyrui.platform.questionnaire.model.QueAnswer;
 import com.luckyrui.platform.questionnaire.model.QueQuestion;
+import com.luckyrui.platform.questionnaire.model.QueQuestionAnswer;
 import com.luckyrui.platform.questionnaire.model.page.PageQuestion;
 import com.luckyrui.platform.questionnaire.service.QuestionService;
+import com.luckyrui.platform.utils.ApiUtils;
+import com.luckyrui.platform.utils.BaseUtils;
 
 /**
  * 问卷问题业务类
@@ -27,11 +33,17 @@ public class QuestionServiceImpl implements QuestionService {
 	 * 问题dao
 	 */
 	@Resource
-	QueQuestionDao queQuestionQao;
+	QueQuestionDao queQuestionDao;
+	
+	@Resource
+	QueAnswerDao queAnswerDao;
+	
+	@Resource
+	QueQuestionAnswerDao queQuestionAnswerDao;
 
 	@Override
 	public List<PageQuestion> getAllQuestionsWithPage() {
-		List<Map<String, Object>> result = queQuestionQao.selectAllShowPage();
+		List<Map<String, Object>> result = queQuestionDao.selectAllShowPage();
 		return returnPageQuestion(result);
 	}
 
@@ -47,6 +59,7 @@ public class QuestionServiceImpl implements QuestionService {
 				pq = new PageQuestion();
 				rtn.add(pq);
 			}
+			pq.setId((String) question.get("qa_id"));
 			pq.setQueQuestion(getQuestion(question));
 			pq.addQueAnswers(getAnswer(question));
 		}
@@ -57,6 +70,8 @@ public class QuestionServiceImpl implements QuestionService {
 		QueQuestion q = new QueQuestion();
 		q.setId((String) question.get("q_id"));
 		q.setQuestion((String) question.get("question"));
+		q.setVisible((String) question.get("q_visible"));
+		q.setSort((Integer) question.get("q_sort"));
 		return q;
 	}
 
@@ -83,6 +98,57 @@ public class QuestionServiceImpl implements QuestionService {
 		}
 		return -1;
 		
+	}
+
+	@Override
+	public Map<String, Object> addQuestion(String question, String[] answer, String sort, String visible) {
+		try {
+			validateAddData(question, answer, sort, visible);
+		} catch (Exception e) {
+			return ApiUtils.getError(e.getMessage());
+		}
+		QueQuestion questionEntity = new QueQuestion();
+		String questionId = BaseUtils.getUUID();
+		questionEntity.setId(questionId);
+		questionEntity.setQuestion(question);
+		questionEntity.setSort(Integer.parseInt(sort));
+		questionEntity.setVisible(visible);
+		questionEntity.setCreateTime(new Date());
+		questionEntity.setCreateUser("u");
+		queQuestionDao.insert(questionEntity);
+		for (String ans : answer) {
+			String ansId = BaseUtils.getUUID();
+			QueAnswer answerEneity = new QueAnswer();
+			answerEneity.setId(ansId);
+			answerEneity.setAnswer(ans);
+			answerEneity.setCreateTime(new Date());
+			answerEneity.setCreateUser("u");
+			queAnswerDao.insert(answerEneity);
+			String qqaId = BaseUtils.getUUID();
+			QueQuestionAnswer qqa = new QueQuestionAnswer();
+			qqa.setId(qqaId);
+			qqa.setAnswerId(ansId);
+			qqa.setQuestionId(questionId);
+			qqa.setSort(Integer.parseInt(sort));
+			qqa.setCreateTime(new Date());
+			qqa.setCreateUser("u");
+			queQuestionAnswerDao.insert(qqa);
+			
+		}
+		
+		return ApiUtils.getSuccess();
+	}
+	
+	public void validateAddData(String question, String[] answer, String sort, String visible) throws Exception{
+		if(BaseUtils.isEmpty(question))
+			throw new Exception("question is null");
+		if(BaseUtils.isEmpty(answer))
+			throw new Exception("answer is null");
+	}
+
+	@Override
+	public void deleteQuestion(String qqaId) {
+		queQuestionAnswerDao.deleteByPrimaryKey(qqaId);
 	}
 
 }
